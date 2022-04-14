@@ -1,0 +1,23 @@
+{
+  "name": "daily-wallpaper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "lint": "npx eslint .",
+    "lint-fix": "npx eslint --fix ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^18.0.3",
+    "eslint": "^8.13.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "node-cron": "^3.0.0",
+    "node-fetch": "^2.6.7",
+    "wallpaper": "^5.0.1"
+  }
+}
