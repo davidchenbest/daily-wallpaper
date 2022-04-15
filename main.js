@@ -30,7 +30,11 @@ ipcMain.on('showDirectory', (event, arg) => {
         event.reply('directoryPath', directory)
       }
     })
+})
 
+ipcMain.on('directoryPath', (event, arg) => {
+  const directory = SavePath.get()
+  event.reply('directoryPath', directory)
 })
 
 app.whenReady().then(async () => {
