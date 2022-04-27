@@ -1,11 +1,9 @@
 const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const path = require('path')
-
-// const cron = require('node-cron');
-const { getImageSrc } = require('./lib/image')
-const { download } = require('./lib/download')
 const { setWallpaper } = require('./lib/wallpaper')
-const { SavePath } = require('./setting')
+
+const cron = require('node-cron')
+const { SavePath, WallpaperSyncTime } = require('./setting')
 
 
 function createWindow() {
@@ -40,13 +38,9 @@ ipcMain.on('directoryPath', (event, arg) => {
 app.whenReady().then(async () => {
   createWindow()
 
-  // const imgSrc = await getImageSrc('https://www.bing.com')
-  // const imgPath = await download(imgSrc, SavePath.get())
-  // setWallpaper(imgPath)
-
-  // cron.schedule('* * * * * *', () => {
-  //   console.log('running a task every sec');
-  // });
+  cron.schedule(WallpaperSyncTime.get(), () => {
+    setWallpaper()
+  })
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

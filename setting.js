@@ -14,4 +14,18 @@ const SavePath = {
     }
 }
 
-module.exports = { SavePath }
+const WallpaperSyncTime = {
+    name: 'wallpaperSyncTime',
+    defaultTime: '0 6 * * *', // At 06:00 AM
+    get() {
+        const time = STORE.get(this.name)
+        if (time) return time
+        this.set(this.defaultTime)
+        return STORE.get(this.name)
+    },
+    set(time) {
+        STORE.set(this.name, time)
+    }
+}
+
+module.exports = { SavePath, WallpaperSyncTime }
