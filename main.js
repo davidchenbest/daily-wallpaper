@@ -4,7 +4,8 @@ const { setWallpaper } = require('./lib/wallpaper')
 
 const cron = require('node-cron')
 const { SavePath, WallpaperSyncTime } = require('./setting')
-
+const { createTray } = require('./lib/tray')
+let TRAY = null
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -17,6 +18,7 @@ function createWindow() {
 
   win.loadFile('index.html')
   win.webContents.openDevTools()
+  return win
 }
 
 ipcMain.on('showDirectory', (event, arg) => {
@@ -36,7 +38,12 @@ ipcMain.on('directoryPath', (event, arg) => {
 })
 
 app.whenReady().then(async () => {
-  createWindow()
+  const win = createWindow()
+  win.on('close', function (event) {
+    event.preventDefault()
+    win.hide()
+    return false
+  })
 
   cron.schedule(WallpaperSyncTime.get(), () => {
     setWallpaper()
@@ -47,6 +54,8 @@ app.whenReady().then(async () => {
       createWindow()
     }
   })
+
+  TRAY = createTray(app)
 })
 
 app.on('window-all-closed', () => {
