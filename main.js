@@ -58,7 +58,7 @@ app.whenReady().then(async () => {
   })
 
   TRAY = createTray(app, win)
-  MENU = createMenu(app)
+  MENU = createMenu(app, win)
 })
 
 app.on('window-all-closed', () => {
