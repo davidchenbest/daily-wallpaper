@@ -5,7 +5,9 @@ const { setWallpaper } = require('./lib/wallpaper')
 const cron = require('node-cron')
 const { SavePath, WallpaperSyncTime } = require('./setting')
 const { createTray } = require('./lib/tray')
+const { createMenu } = require('./lib/menu')
 let TRAY = null
+let MENU = null
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -55,7 +57,8 @@ app.whenReady().then(async () => {
     }
   })
 
-  TRAY = createTray(app)
+  TRAY = createTray(app, win)
+  MENU = createMenu(app)
 })
 
 app.on('window-all-closed', () => {
