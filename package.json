@@ -6,12 +6,16 @@
   "scripts": {
     "start": "electron .",
     "lint": "npx eslint .",
-    "lint-fix": "npx eslint --fix ."
+    "lint-fix": "npx eslint --fix .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager .  daily-wallpaper --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Daily Wallpaper\"",
+    "package-linux": "electron-packager . daily-wallpaper --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "electron": "^18.0.3",
+    "electron-packager": "^15.5.1",
     "eslint": "^8.13.0"
   },
   "dependencies": {
