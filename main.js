@@ -43,16 +43,32 @@ ipcMain.on('directoryPath', (event, arg) => {
   event.reply('directoryPath', directory)
 })
 
-app.on('ready', async () => {
-  mainWindow = createWindow()
-
-  cron.schedule(WallpaperSyncTime.get(), () => {
-    setWallpaper()
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+}
+else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.show()
+      mainWindow.focus()
+    }
   })
 
-  createMenu(app, mainWindow)
-  createTray(app, mainWindow)
-})
+  // Create mainWindow, load the rest of the app, etc...
+  app.on('ready', async () => {
+    mainWindow = createWindow()
+    setWallpaper()
+    cron.schedule(WallpaperSyncTime.get(), () => {
+      setWallpaper()
+    })
+
+    createMenu(app, mainWindow)
+    createTray(app, mainWindow)
+  })
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
