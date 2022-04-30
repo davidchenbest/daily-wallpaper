@@ -28,4 +28,14 @@ const WallpaperSyncTime = {
     }
 }
 
-module.exports = { SavePath, WallpaperSyncTime }
+const OpenAtLogin = {
+    name: 'openAtLogin',
+    get() {
+        return !!STORE.get(this.name)
+    },
+    set(sign) {
+        STORE.set(this.name, sign)
+    }
+}
+
+module.exports = { SavePath, WallpaperSyncTime, OpenAtLogin }

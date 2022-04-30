@@ -3,10 +3,13 @@ const path = require('path')
 const { setWallpaper } = require('./lib/wallpaper')
 
 const cron = require('node-cron')
-const { SavePath, WallpaperSyncTime } = require('./setting')
+const { SavePath, WallpaperSyncTime, OpenAtLogin } = require('./setting')
 const { createTray } = require('./lib/tray')
 const { createMenu } = require('./lib/menu')
 let mainWindow = null
+
+
+process.platform !== 'linux' && app.setLoginItemSettings({ openAtLogin: OpenAtLogin.get() }) // mac and win
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -18,7 +21,7 @@ function createWindow() {
   })
 
   win.loadFile('index.html')
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
   win.on('close', event => {
     event.preventDefault()
     win.hide()
@@ -26,6 +29,10 @@ function createWindow() {
   })
   return win
 }
+
+ipcMain.on('platform', event => {
+  event.reply('platform', process.platform)
+})
 
 ipcMain.on('showDirectory', (event, arg) => {
   dialog.showOpenDialog({ properties: ['openDirectory'] })
@@ -41,6 +48,14 @@ ipcMain.on('showDirectory', (event, arg) => {
 ipcMain.on('directoryPath', (event, arg) => {
   const directory = SavePath.get()
   event.reply('directoryPath', directory)
+})
+
+process.platform !== 'linux' && ipcMain.on('openAtLogin', (event, arg) => {
+  if (arg !== undefined) {
+    OpenAtLogin.set(!!arg)
+    app.setLoginItemSettings({ openAtLogin: !!arg })
+  }
+  event.reply('openAtLogin', OpenAtLogin.get())
 })
 
 const gotTheLock = app.requestSingleInstanceLock()
